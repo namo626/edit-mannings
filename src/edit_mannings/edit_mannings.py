@@ -49,7 +49,7 @@ def main():
     if args.criterion == 1:
         criterion = is_node_in_box
     else:
-        criterion = lambda node,nodes : is_node_in_box(node,arr14) and is_node_above_navd(node,arr14)
+        criterion = lambda node,f14 : is_node_in_box(node,f14) and is_node_above_navd(node,f14)
 
     if args.modifier == 1:
         modifier = randomize_mannings
