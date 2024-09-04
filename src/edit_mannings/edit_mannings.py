@@ -39,12 +39,18 @@ def main():
                         default=1, dest='modifier', choices=range(1,3))
     parser.add_argument('--factor', type=float, help='Factor to multiply if modifier 2 is chosen',
                         default=5., dest='factor')
+    parser.add_argument('-o', type=str, help='Output file name. If not specified, will be <fort13>.modified', dest='outfile')
 
     args = parser.parse_args()
     fort13 = args.fort13
     fort14 = args.fort14
 
     arr14 = load14(fort14)
+
+    if args.outfile is not None:
+      outfile = args.outfile
+    else:
+      outfile = fort13 + '.modified'
 
     if args.criterion == 1:
         criterion = is_node_in_box
@@ -56,7 +62,7 @@ def main():
     else:
         modifier = ft.partial(multiply_mannings, factor=args.factor)
 
-    modify_count = write13(fort13, arr14, criterion, modifier)
+    modify_count = write13(fort13, outfile, arr14, criterion, modifier)
     print("Modified " + str(modify_count) + " nodes.")
 
 
@@ -103,8 +109,8 @@ def is_node_above_navd(node, arr, navd=0.276):
 #############################################################
 
 # Load and copy fort.13 with edited section
-def write13(fort13, arr14, criteria, modifier):
-    with open(fort13, 'r') as f1, open(fort13 + ".modified", "w") as f2:
+def write13(fort13, fort13_out, arr14, criteria, modifier):
+    with open(fort13, 'r') as f1, open(fort13_out, "w") as f2:
 
         # Read until first "manning's n" keyword
         wflg = False
